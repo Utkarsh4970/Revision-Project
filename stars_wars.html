@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    body {
+      background-image: url("https://thumbs.gfycat.com/CompetentWeirdAstrangiacoral-size_restricted.gif");
+    }
+
+    #container {
+      margin: 0px auto;
+      border-radius: 20px;
+      width: 600px;
+      background-color: rgb(46, 43, 43);
+    }
+
+    #search {
+      width: 98%;
+    }
+
+    #search>input {
+      font-size: 30px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      height: 50px;
+      background-color: rgb(46, 43, 43);
+    }
+
+    #name_option {
+      padding-left: 2%;
+      padding-top: 2%;
+      width: 100%;
+      border: 1px solid black;
+      border-top: none;
+    }
+
+    #name_option div p {
+      color: white;
+      font-size: 20px;
+    }
+
+    #name_option div {
+      display: flex;
+      justify-content: space-between;
+      padding: 0px 15px 0px 5px;
+    }
+
+    #star_icon {
+      margin: auto;
+      width: 300px;
+
+    }
+
+    #star_icon img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="star_icon">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Star_Wars_Logo.svg/800px-Star_Wars_Logo.svg.png"
+      alt="">
+  </div>
+  <div id="container">
+    <div id="search">
+      <input type="text" placeholder="Search Characters" id="query" oninput="debounce(main, 1000)" />
+      <div id="name_option"></div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
+<script>
+
+
+  var timerid;
+
+  async function main() {
+
+    let query = document.getElementById("query").value;
+
+    let div_name = document.getElementById("name_option");
+    div_name.innerHTML = null;
+
+    let res = await fetch(`https://swapi.dev/api/people/?search=${query}`);
+    let data = await res.json();
+    let results = data.results;
+    console.log(results)
+    if (query.length > 1) {
+      results.forEach(el => {
+
+        let name = el.name;
+        let gender = el.gender;
+        let div_p = document.createElement("div")
+        div_p.addEventListener("click", function () {
+          div_p.innerHTML = null;
+          div_p.style.backgroundColor = "rgb(46, 43, 43)";
+
+          let h4 = document.createElement("h4");
+          h4.style.color = "red"
+          h4.innerText = "D.O.B :-" + el.birth_year + "--->" + "Eye Color :-" + el.eye_color + "--->" + "Height :- " + el.height + "--->" + "mass :-" + el.mass + "--->" + "Skin color :-" + el.skin_color
+
+          div_p.appendChild(h4)
+        });
+
+        let div_name = document.getElementById("name_option");
+
+        let p_name = document.createElement("p");
+        p_name.innerText = name;
+
+        let p_gender = document.createElement("p");
+        p_gender.innerText = gender;
+
+        div_p.appendChild(p_name)
+        div_p.appendChild(p_gender)
+
+        div_name.prepend(div_p);
+
+        // console.log(name);
+      });
+
+      // console.log("data", data.results);
+      // console.log(query);
+    }
+
+  }
+  function debounce(func, delay) {
+
+    if (timerid) {
+      clearTimeout(timerid);
+    }
+
+    timerid = setTimeout(function () {
+      func();
+    }, delay);
+  }
+
+
+
+
+
+
+
+  // food app    
+  // var name = document.getElementById("food").value;
+
+  // async function main() {
+
+  //   let res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`)
+  //   let data = await res.json()
+  //   console.log("data", data)
+  // }
+
+
+
+
+  // html part
+  // <input id="food" placeholder="Search" oninput="main()" />
+
+</script>
