@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Stars Wars</title>
+
+    <style>
+        body {
+            background-image: url("https://thumbs.gfycat.com/CompetentWeirdAstrangiacoral-size_restricted.gif");
+        }
+
+        #Navbar img {
+            height: 50px;
+        }
+
+        #Navbar {
+            background-color: rgb(65, 11, 112);
+            color: cornsilk;
+            padding: 10px;
+            width: 100%;
+            position: fixed;
+        }
+
+        #search_bar input {
+            background-color: rgb(209, 175, 241);
+            border: none;
+            border-radius: 5px;
+            font-size: 25px;
+            width: 450px;
+        }
+
+        #search_bar>input:hover {
+            background-color: rgb(252, 251, 253);
+        }
+
+        #img_body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #img_body img {
+            width: 300px;
+            height: 250px;
+            margin: 15px;
+            border-radius: 5px;
+        }
+
+        #img_body img:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div id="Navbar" class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between">
+                <img src="https://cdn.iconscout.com/icon/free/png-256/imgur-283010.png" class="mx-4" />
+                <button type="button" class="btn btn-success btn-lg">New Posts</button>
+            </div class="d-flex justify-content-between">
+            <div id="search_bar" class="d-flex justify-content-between">
+                <input oninput="handleinput(3000)" id="query" placeholder="Images, #Tags Search" class="mx-4" />
+                <button type="button" class="btn btn-primary btn-lg">New Posts</button>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p class="mx-4">Utkarsh075</p>
+                <p></p>
+            </div>
+        </div>
+        <div style="height:200px">
+
+        </div>
+        <div id="img_body">
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+<script>
+
+    var img_body = document.getElementById("img_body");
+    var time_out;
+    var p_page = 1;
+    let img_query = "forest";
+
+    const handleinput = (delay) => {
+
+        if (time_out) {
+            clearTimeout(time_out)
+        }
+
+        time_out = setTimeout(() => {
+            let query = document.getElementById("query").value;
+            // console.log(query, delay)
+            img_query = query;
+            loaddata(p_page, query)
+
+        }, delay)
+
+        // console.log(time_out)
+
+    }
+
+    const loaddata = async (p_page, category) => {
+
+        try {
+
+            let res = await fetch(` https://api.unsplash.com/search/photos?client_id=7P3qUCce1DgTFdhMkujw91Es9Kqhnx43hR1qwZmQ7fI&page=${p_page}&per_page=25&query=${category}`);
+
+            let data = await res.json();
+            // console.log(data.results)
+            const { results } = data;
+            // console.log(results)
+
+            for (let i = 0; i < results.length; i++) {
+                // console.log(results[i])
+                const { urls: { small } } = results[i];
+                // console.log(small);
+                let img_ap = document.createElement("img");
+                img_ap.src = small;
+                img_body.appendChild(img_ap)
+
+
+            }
+
+
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+    }
+
+
+    window.addEventListener('scroll', () => {
+        const {
+            scrollTop,
+            scrollHeight,
+            clientHeight
+        } = document.documentElement;
+
+        console.log(scrollTop, scrollHeight, clientHeight, img_query)
+        if(scrollHeight - scrollTop == clientHeight){
+            p_page++;
+            loaddata(p_page, img_query);
+        }
+
+        // if (scrollTop + clientHeight >= scrollHeight - 5 &&
+        //     hasMoreQuotes(currentPage, limit, total)) {
+        //     currentPage++;
+        //     loadQuotes(currentPage, limit);
+        // }
+    }, {
+        passive: true
+    });
+
+    // loaddata("forest")
+
+
+</script>
+
+<!--  -->
+
+<!--  Acess-Key= 7P3qUCce1DgTFdhMkujw91Es9Kqhnx43hR1qwZmQ7fI -->
+
+
+<!--  https://api.unsplash.com/search/photos?client_id=7P3qUCce1DgTFdhMkujw91Es9Kqhnx43hR1qwZmQ7fI&page=1&per_page=25&query=office -->
